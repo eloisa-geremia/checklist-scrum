@@ -1,4 +1,4 @@
-<form id="form">
+<form id="form"> 
   <input 
     type="text" 
     id="inputTarefa" 
@@ -37,7 +37,7 @@
     }
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (input.value.trim() === "") {
@@ -47,20 +47,34 @@
 
     btn.disabled = true;
     btn.textContent = "Salvando...";
+    erroMsg.textContent = "";
 
-    // Simulação de envio (futuro: chamar backend)
-    setTimeout(() => {
-      alert("Dados salvos: " + input.value);
+    try {
+      const response = await fetch("http://localhost:3000/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tarefa: input.value })
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar tarefa no servidor");
+      }
+
+      const novaTarefa = await response.json();
 
       // adiciona na lista visual
       const li = document.createElement("li");
-      li.textContent = input.value;
+      li.textContent = novaTarefa.tarefa; // assume que o backend retorna { tarefa: "texto" }
       lista.appendChild(li);
 
       // reset
       input.value = "";
+      verificarCampo();
+    } catch (err) {
+      erroMsg.textContent = err.message;
+    } finally {
       btn.textContent = "Salvar";
       verificarCampo();
-    }, 1000);
+    }
   });
 </script>
