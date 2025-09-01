@@ -13,28 +13,54 @@
   >
     Salvar
   </button>
+  
+  <!-- mensagem de erro inline -->
+  <p id="erroMsg" style="color: red; font-size: 14px;"></p>
 </form>
+
+<ul id="listaTarefas"></ul>
 
 <script>
   const input = document.getElementById("inputTarefa");
   const btn = document.getElementById("btnSalvar");
   const form = document.getElementById("form");
+  const erroMsg = document.getElementById("erroMsg");
+  const lista = document.getElementById("listaTarefas");
 
   function verificarCampo() {
-    btn.disabled = input.value.trim() === "";
+    if (input.value.trim() === "") {
+      btn.disabled = true;
+      erroMsg.textContent = "O campo não pode estar vazio!";
+    } else {
+      btn.disabled = false;
+      erroMsg.textContent = "";
+    }
   }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    if (input.value.trim() === "") {
+      erroMsg.textContent = "O campo não pode estar vazio!";
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = "Salvando...";
 
-    // Simulação de envio
+    // Simulação de envio (futuro: chamar backend)
     setTimeout(() => {
       alert("Dados salvos: " + input.value);
+
+      // adiciona na lista visual
+      const li = document.createElement("li");
+      li.textContent = input.value;
+      lista.appendChild(li);
+
+      // reset
+      input.value = "";
       btn.textContent = "Salvar";
-      verificarCampo(); // reativa se o campo não estiver vazio
-    }, 1500);
+      verificarCampo();
+    }, 1000);
   });
 </script>
