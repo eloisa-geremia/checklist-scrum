@@ -1,0 +1,40 @@
+<form id="form">
+  <input 
+    type="text" 
+    id="inputTarefa" 
+    placeholder="Digite algo..." 
+    oninput="verificarCampo()" 
+  />
+
+  <button 
+    type="submit" 
+    id="btnSalvar" 
+    disabled
+  >
+    Salvar
+  </button>
+</form>
+
+<script>
+  const input = document.getElementById("inputTarefa");
+  const btn = document.getElementById("btnSalvar");
+  const form = document.getElementById("form");
+
+  function verificarCampo() {
+    btn.disabled = input.value.trim() === "";
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    btn.disabled = true;
+    btn.textContent = "Salvando...";
+
+    // Simulação de envio
+    setTimeout(() => {
+      alert("Dados salvos: " + input.value);
+      btn.textContent = "Salvar";
+      verificarCampo(); // reativa se o campo não estiver vazio
+    }, 1500);
+  });
+</script>
